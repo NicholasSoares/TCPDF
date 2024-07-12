@@ -1691,6 +1691,13 @@ class TCPDF {
 	protected $svgtextmode = array();
 
 	/**
+	 * Aditional put info content.
+	 * @protected
+	 * @since 6.7.5 (2024-07-12)
+	 */
+	protected $additionalPutInfo = array();
+
+	/**
 	 * Array of SVG properties.
 	 * @protected
 	 * @since 5.0.000 (2010-05-02)
@@ -2940,6 +2947,16 @@ class TCPDF {
 	 */
 	public function setTitle($title) {
 		$this->title = $title;
+	}
+
+	/**
+	 * Defines the aditional put info content.
+	 * @param $array (array) The contents
+	 * @public
+	 * @since 6.7.5 (2024-07-12)
+	 */
+	public function SetAdditionalPutInfo($array) {
+		$this->additionalPutInfo = $array;
 	}
 
 	/**
@@ -9600,6 +9617,12 @@ class TCPDF {
 		$out .= ' /ModDate '.$this->_datestring(0, $this->doc_modification_timestamp);
 		// A name object indicating whether the document has been modified to include trapping information
 		$out .= ' /Trapped /False';
+
+		// The aditional put info if present is inserted here
+		foreach($this->additionalPutInfo as $key => $value) {
+			$out .= ' /'.$key.' '.$this->_textstring($value, $oid);
+		}
+
 		$out .= ' >>';
 		$out .= "\n".'endobj';
 		$this->_out($out);
